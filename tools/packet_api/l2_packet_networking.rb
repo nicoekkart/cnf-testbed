@@ -264,11 +264,15 @@ end
 # 7. Upsert 1st and 2nd vlans
 # 7.a get list of lans
 if options[:create_vlan]
+  puts {
+    "results": "abc"
+  }
+  <<-DOC
   vlans_response = phttp.api(url_extention: "/projects/#{project_id}/virtual-networks")
   parsed_vlans = JSON.parse(vlans_response.body) 
   p "parsed vlans_response: #{parsed_vlans}"  if options[:verbose]
   # 7.b Get existing vlan if it exists by description
-  vlan1 = parsed_vlans["virtual_networks"].find{|x| x["description"] == "#{options[:create_vlan]}" && x["facility_code"].casecmp(facility) == 0 }
+  #vlan1 = parsed_vlans["virtual_networks"].find{|x| x["description"] == "#{options[:create_vlan]}" && x["facility_code"].casecmp(facility) == 0 }
   p "existing_vlan1: #{vlan1}"  if options[:verbose]
   # 7.b Create new Vlans, vxlan = vlan
   unless vlan1
@@ -291,6 +295,7 @@ if options[:create_vlan]
   else
     puts vlan1["vxlan"]
   end
+  DOC
 end
 
 if options[:delete_vlan]

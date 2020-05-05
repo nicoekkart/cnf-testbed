@@ -40,6 +40,8 @@ docker run \
   /k8s-infra/bin/k8sinfra generate_config ${HOSTS_CMD} --release-type=$RELEASE_TYPE -o /k8s-infra/data/cluster.yml
 fi
 
+sudo sed -i 's/v1.18.2/v1.17.4/g' $(pwd)/data/$DEPLOY_NAME/cluster.yml
+
 #Provision Cluster
 if [ "$1" == "provision" ]; then
     CLUSTER_DATA="$(pwd)/data/$DEPLOY_NAME/mycluster"
