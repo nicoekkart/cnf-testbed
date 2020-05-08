@@ -36,7 +36,7 @@ docker run \
   --rm \
   -v $(pwd)/data/$DEPLOY_NAME:/k8s-infra/data \
   $HOSTS_VOLUME$HOSTS_TMP \
-  -ti crosscloudci/k8s-infra:v1.0.0 \
+  crosscloudci/k8s-infra:v1.0.0 \
   /k8s-infra/bin/k8sinfra generate_config ${HOSTS_CMD} --release-type=$RELEASE_TYPE -o /k8s-infra/data/cluster.yml
 fi
 
@@ -53,7 +53,7 @@ docker run \
   --rm \
   -v $(pwd)/data/$DEPLOY_NAME:/k8s-infra/data \
   -v ~/.ssh/id_rsa:/root/.ssh/id_rsa \
-  -ti crosscloudci/k8s-infra:multus \
+  crosscloudci/k8s-infra:multus \
   /k8s-infra/bin/k8sinfra provision --config-file=/k8s-infra/data/cluster.yml
 
 if [ "$?" == "1" ]; then
@@ -71,7 +71,7 @@ if [ "$1" == "vswitch" ] || [ "$1" == "gogtp_multi" ] || [ "$1" == "isolcpus" ];
         WORKER_IPS_ARRAY=($(echo $WORKER_HOSTS | tr ',' ' '))
         WORKER_HOSTNAMES="$(for ((n=1;n<"${#WORKER_IPS_ARRAY[@]}";n++)); do echo -n $DEPLOY_NAME-worker$n,;done;echo -n $DEPLOY_NAME-worker"${#WORKER_IPS_ARRAY[@]}")"
     elif ! [ -z ${KUBECONFIG+x} ]; then
-        WORKER_IPS_ARRAY=($(docker run -v $KUBECONFIG:/tmp/admin.conf -e KUBECONFIG=/tmp/admin.conf -ti bitnami/kubectl get no -o 'go-template={{range .items}}{{$taints:=""}}{{range .spec.taints}}{{if eq .effect "NoSchedule"}}{{$taints = print $taints .key ","}}{{end}}{{end}}{{if not $taints}}{{range .status.addresses}}{{if (eq .type "InternalIP") }}{{.address}}{{" "}}{{end}}{{end}}{{end}}{{end}}'))
+        WORKER_IPS_ARRAY=($(docker run -v $KUBECONFIG:/tmp/admin.conf -e KUBECONFIG=/tmp/admin.conf bitnami/kubectl get no -o 'go-template={{range .items}}{{$taints:=""}}{{range .spec.taints}}{{if eq .effect "NoSchedule"}}{{$taints = print $taints .key ","}}{{end}}{{end}}{{if not $taints}}{{range .status.addresses}}{{if (eq .type "InternalIP") }}{{.address}}{{" "}}{{end}}{{end}}{{end}}{{end}}'))
         WORKER_IPS="$(echo ${WORKER_IPS_ARRAY[@]} | tr ' ', ',')"
         WORKER_HOSTNAMES="$(for ((n=1;n<"${#WORKER_IPS_ARRAY[@]}";n++)); do echo -n $DEPLOY_NAME-worker$n,;done;echo -n $DEPLOY_NAME-worker"${#WORKER_IPS_ARRAY[@]}")"
     else
@@ -89,7 +89,7 @@ docker run \
        -e ANSIBLE_HOST_KEY_CHECKING=False \
        -e ISOLATED_CORES=${ISOLATED_CORES} \
        --entrypoint=ansible-playbook \
-       -ti cnfdeploytools:latest -i "${WORKER_IPS}," -e server_list="${WORKER_HOSTNAMES}" /ansible/$PLAYBOOK
+       cnfdeploytools:latest -i "${WORKER_IPS}," -e server_list="${WORKER_HOSTNAMES}" /ansible/$PLAYBOOK
 fi
 
 
