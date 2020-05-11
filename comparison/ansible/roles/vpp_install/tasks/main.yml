@@ -1,8 +1,4 @@
 ---
-- name: find the controller host address
-  set_fact:
-    host_0_address: "{{hostvars[groups['all'][0]].ansible_bond0.ipv4.address}}"
-
 - name: Add packagecloud gpg key
   apt_key:
     url: https://packagecloud.io/fdio/{{vpp_branch}}/gpgkey
