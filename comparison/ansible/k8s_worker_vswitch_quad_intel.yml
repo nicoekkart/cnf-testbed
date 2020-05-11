@@ -38,9 +38,6 @@
     pip:
       name: docker-py
     when: vswitch_container
-  post_tasks:
-  - name: Reboot Server
-    reboot:
   roles:
 # - grub_update
     - { role: "vpp_install", when: not vswitch_container }
