@@ -1,0 +1,59 @@
+apps:
+  pgw:
+    endpoint: true
+    networks: 
+      #- lte-sgi
+      - lte-s5u
+      #- lte-s5c
+    local_addresses: 
+      #s5c_ip: "172.25.1.14"
+      #s5u_ip: "172.25.0.14"
+      sgi_ip: "10.60.1.2"
+    sgi_if_name: ""
+    route_subnet: "10.60.1.0/24"
+
+  sgw:
+    endpoint: true
+    networks: 
+      - lte-s11
+      - lte-s1u
+      #- lte-s5u
+      - lte-s5c
+    local_addresses:
+      s11_ip: "172.22.0.13"
+      s1u_ip: "172.21.0.13"
+      s5c_ip: "172.25.1.13"
+      s5u_ip: "172.25.0.13"
+
+  mme:
+    endpoint: true
+    networks: 
+    local_addresses:
+      s1c_addr: "172.21.1.12:36412"
+      s11_ip: "172.22.0.12"
+    sgw_s11_ip: "172.22.0.13"
+    pgw_s5c_ip: "172.25.1.14"
+
+  enb:
+    endpoint: true
+    networks: 
+      - lte-s1c
+    local_addresses:
+      s1c_ip: "172.21.1.11"
+      s1u_ip: "172.21.0.11"
+      euu_ip: "10.0.0.254"
+    mme_addr: "172.21.1.12:36412"
+    prom_addr:
+
+endpoints:
+  ue:
+    networks: 
+      - lte-euu
+    local_addresses:
+      euu_ip: "10.0.0.201"
+
+  ext:
+    networks: 
+      - lte-sgi
+    local_addresses:
+      sgi_ip: "10.0.1.201"
