@@ -32,7 +32,7 @@ ifeq (pktgen,$(firstword $(MAKECMDGOALS)))
 	include Makefile.pktgen
 endif
 #K8s
-RELEASE_TYPE := kubespray
+RELEASE_TYPE := stable
 #vSwitch
 ifeq (vswitch,$(firstword $(MAKECMDGOALS)))
 	include Makefile.vswitch
