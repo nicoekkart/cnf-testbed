@@ -14,7 +14,7 @@ spec:
         networkservicemesh.io/impl: {{ $.Chart.Name }}
     spec:
       containers:
-      {{ if $v.endpoint }}
+      {{ if $v.endpoint_ip }}
       - name: sidecar-nse
         image: nicoekkart/4g-network-sidecar-nse:latest
         imagePullPolicy: IfNotPresent
@@ -29,16 +29,16 @@ spec:
             value: "app={{ $k }}"
           - name: TRACER_ENABLED
             value: "true"
-          #- name: IP_ADDRESS
-          #  value: "10.60.1.0/24"
-          - name: NSC_INTERFACE_NAME
-            value: "{{ $k }}"
-          - name: NSE_INTERFACE_NAME
-            value: "{{ $k }}"
+          - name: IP_ADDRESS
+            value: {{ $v.endpoint_ip }}
         resources:
           limits:
             networkservicemesh.io/socket: 1
       {{ end }}
+      - name: dummy
+        image: alpine:latest
+        command: ["tail", "-f", "/dev/null"]
+      {{ if $v.real }}
       - name: {{ $.Chart.Name }}-{{ $k }}
         image: "soelvkaer/gogtp:{{$k}}"
         imagePullPolicy: IfNotPresent
@@ -61,6 +61,7 @@ spec:
         volumeMounts:
         - name: gogtp-conf-{{$k}}
           mountPath: /root/
+      {{ end }}
       volumes:
       - name: gogtp-conf-{{$k}}
         configMap:

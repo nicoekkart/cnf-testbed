@@ -14,44 +14,37 @@ spec:
           destinationSelector:
             app: pgw
     - match:
-      sourceselector:
-        app: lte-s5c
-      route:
-        - destination:
-          destinationselector:
-            app: pgw
-    - match:
-      sourceselector:
+      sourceSelector:
         app: lte-s5u
       route:
         - destination:
-          destinationselector:
+          destinationSelector:
             app: sgw
     - match:
-      sourceselector:
+      sourceSelector:
         app: lte-s11
       route:
         - destination:
-          destinationselector:
+          destinationSelector:
             app: mme
     - match:
-      sourceselector:
+      sourceSelector:
         app: lte-s1u
       route:
         - destination:
-          destinationselector:
+          destinationSelector:
             app: enb
     - match:
-      sourceselector:
+      sourceSelector:
         app: lte-s1c
       route:
         - destination:
-          destinationselector:
+          destinationSelector:
             app: mme
     - match:
-      sourceselector:
+      sourceSelector:
         app: lte-euu
       route:
         - destination:
-          destinationselector:
+          destinationSelector:
             app: enb
