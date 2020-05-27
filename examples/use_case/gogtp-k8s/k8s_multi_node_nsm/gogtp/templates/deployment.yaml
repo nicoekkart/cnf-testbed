@@ -46,12 +46,14 @@ spec:
         {{ if eq $k "enb" }}
         args:
           - sleep 30;
-            ./root/enb_setup.sh;
-            /usr/local/bin/enb -config /root/enb.yml;
+            ./root/enb_setup.sh /root/enb.yml /enb.yml;
+            tail -f /dev/null;
+            #/usr/local/bin/enb -config /root/enb.yml;
         {{ else }}
         args:
-          - ./root/{{$k}}_setup.sh;
-            /usr/local/bin/{{$k}} -config /root/{{$k}}.yml;
+          - ./root/{{$k}}_setup.sh /root/{{$k}}.yml /{{$k}}.yml;
+            tail -f /dev/null;
+            #/usr/local/bin/{{$k}} -config /root/{{$k}}.yml;
         {{ end }}
         securityContext:
           privileged: true

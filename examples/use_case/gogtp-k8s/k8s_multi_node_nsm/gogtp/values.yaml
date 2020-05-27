@@ -13,6 +13,7 @@ apps:
     route_subnet: "10.60.1.0/24"
 
   sgw:
+    real: true
     endpoint_ip: "10.60.2.0/24"
     networks: 
       - lte-s11
@@ -20,31 +21,31 @@ apps:
       #- lte-s5u
       #- lte-s5c
     local_addresses:
-      s11_ip: "10.60.3.0"
-      s1u_ip: "10.60.4.0"
-      s5c_ip: "10.60.2.0"
-      s5u_ip: "10.60.2.0"
+      s11_ip: "10.60.3.*"
+      s1u_ip: "10.60.4.*"
+      s5c_ip: "10.60.2.+"
+      s5u_ip: "10.60.2.+"
 
   mme:
     real: true
     endpoint_ip: "10.60.3.0/24"
     networks: 
     local_addresses:
-      s1c_addr: "10.60.3.0:36412"
-      s11_ip: "172.22.0.12"
-    sgw_s11_ip: "172.22.0.13"
-    pgw_s5c_ip: "172.25.1.14"
+      s1c_addr: "0.0.0.0:36412"
+      s11_ip: "0.0.0.0"
+    sgw_s11_ip: "10.60.3.+"
+    pgw_s5c_ip: "10.60.2.1"
 
   enb:
     real: true
     endpoint_ip: "10.60.4.0/24"
     networks: 
-      - lte-s1
+      - lte-s1c
     local_addresses:
-      s1c_ip: "10.60.3.1"
+      s1c_ip: "10.60.3.*"
       s1u_ip: "10.60.4.0"
       euu_ip: "10.60.4.0"
-    mme_addr: "10.60.3.1:36412"
+    mme_addr: "10.60.3.+:36412"
     prom_addr:
 
 endpoints:
