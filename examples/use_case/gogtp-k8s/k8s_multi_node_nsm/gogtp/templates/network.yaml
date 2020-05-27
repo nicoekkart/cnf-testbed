@@ -22,6 +22,13 @@ spec:
             app: sgw
     - match:
       sourceSelector:
+        app: lte-s5c
+      route:
+        - destination:
+          destinationSelector:
+            app: sgw
+    - match:
+      sourceSelector:
         app: lte-s11
       route:
         - destination:
