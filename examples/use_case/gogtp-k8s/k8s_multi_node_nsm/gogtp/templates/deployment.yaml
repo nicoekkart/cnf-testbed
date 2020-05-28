@@ -35,9 +35,10 @@ spec:
           limits:
             networkservicemesh.io/socket: 1
       {{ end }}
-      - name: dummy
-        image: alpine:latest
-        command: ["tail", "-f", "/dev/null"]
+      - name: python
+        image: python:slim
+        command: ["python", "-m", "http.server", "{{ $v.idPort }}"]
+        imagePullPolicy: IfNotPresent
       {{ if $v.real }}
       - name: {{ $.Chart.Name }}-{{ $k }}
         image: "soelvkaer/gogtp:{{$k}}"
@@ -45,14 +46,15 @@ spec:
         command: ["/bin/sh","-c"]
         {{ if eq $k "enb" }}
         args:
-          - sleep 30;
+          - sleep 40;
             ./root/enb_setup.sh /root/enb.yml /enb.yml;
             tail -f /dev/null;
             #/usr/local/bin/enb -config /root/enb.yml;
         {{ else }}
         args:
-          - ./root/{{$k}}_setup.sh /root/{{$k}}.yml /{{$k}}.yml;
-            tail -f /dev/null;
+          - sleep 10;
+            ./root/{{$k}}_setup.sh /root/{{$k}}.yml /{{$k}}.yml;
+            #tail -f /dev/null;
             #/usr/local/bin/{{$k}} -config /root/{{$k}}.yml;
         {{ end }}
         securityContext:
@@ -93,6 +95,10 @@ spec:
         networkservicemesh.io/impl: {{ $.Chart.Name }}
     spec:
       containers:
+      - name: python
+        image: python:slim
+        command: ["python", "-m", "http.server", "{{ $v.idPort }}"]
+        imagePullPolicy: IfNotPresent
       - name: {{ $.Chart.Name }}-{{$k}}
         image: "ubuntu:18.04"
         imagePullPolicy: IfNotPresent
