@@ -1,5 +1,6 @@
 apps:
   pgw:
+    node: "node2"
     idPort: "1234"
     real: true
     endpoint_ip: "10.60.1.0/24"
@@ -12,9 +13,10 @@ apps:
       s5u_ip: "10.60.2.*1235"
       sgi_ip: "10.60.1.*1239"
     sgi_if_name: "10.60.1.IF1239"
-    route_subnet: "10.60.1.0/24"
+    route_subnet: "10.60.0.0/16"
 
   sgw:
+    node: "node1"
     idPort: "1235"
     real: true
     endpoint_ip: "10.60.2.0/24"
@@ -29,6 +31,7 @@ apps:
       s5u_ip: "10.60.2.*1234"
 
   mme:
+    node: "node1"
     idPort: "1236"
     real: true
     endpoint_ip: "10.60.3.0/24"
@@ -41,6 +44,7 @@ apps:
     pgw_s5c_ip: "10.60.2.1"
 
   enb:
+    node: "node1"
     idPort: "1237"
     real: true
     endpoint_ip: "10.60.4.0/24"
@@ -50,21 +54,26 @@ apps:
     local_addresses:
       s1c_ip: "10.60.3.*1236"
       s1u_ip: "10.60.4.*1235"
-      euu_ip: "10.60.4.*1238"
+      euu_ip: "10.60.4.-1238"
+      euu_if: "10.60.4.IF1238"
     mme_addr: "10.60.3.+1236:36412"
     prom_addr:
 
 endpoints:
   ue:
+    node: "node1"
     idPort: "1238"
     networks: 
       - lte-euu
     local_addresses:
-      euu_ip: "10.60.4.1"
+      euu_ip: "10.60.4.*"
+      sgi_ip: "10.60.1.0/24"
 
   ext:
+    node: "node2"
     idPort: "1239"
     networks: 
       - lte-sgi
     local_addresses:
-      sgi_ip: "10.60.1.1"
+      sgi_ip: "10.60.1.*"
+      euu_ip: "10.60.4.0/24"

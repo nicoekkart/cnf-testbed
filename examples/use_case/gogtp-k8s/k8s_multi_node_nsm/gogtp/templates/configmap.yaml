@@ -188,11 +188,10 @@ data:
     - imsi: "001010000000001"
       msisdn: "814000000001"
       imeisv: "1234500000001"
-      src_ip: "10.0.0.201"
+      src_ip: "{{ $.Values.apps.enb.local_addresses.euu_ip }}"
       i_tei: 0
       type: "external"
-      euu_if_name: "eth1"
-      #euu_if_name: "net1"
+      euu_if_name: "{{ $.Values.apps.enb.local_addresses.euu_if }}"
       http_url: ""
       reattach_on_reload: false
   enb_setup.sh: |-
@@ -246,8 +245,9 @@ data:
     #! /bin/bash
     apt-get update
     apt-get -y install iputils-ping wget iproute2
-    #ip addr add {{ .Values.endpoints.ue.local_addresses.euu_ip }}/24 dev net1
-    #ip route add {{ .Values.endpoints.ext.local_addresses.sgi_ip }} via {{ .Values.apps.enb.local_addresses.euu_ip }} dev net1
+    euu_ip="{{ .Values.endpoints.ue.local_addresses.euu_ip }}"
+    final_ip=$(ip route list | grep ${euu_ip} | awk '{print $9}' | awk -F "." '{print $1"."$2"."$3"."$4+1}')
+    ip route add {{ .Values.endpoints.ue.local_addresses.sgi_ip }} via ${final_ip} dev nsm0
     tail -f /dev/null
 
 ---
@@ -260,7 +260,8 @@ data:
     #! /bin/bash
     apt-get update
     apt-get -y install python3 iproute2
-    #ip addr add {{ .Values.endpoints.ext.local_addresses.sgi_ip }}/24 dev net1
-    #ip route add {{ .Values.endpoints.ue.local_addresses.euu_ip }} via {{ .Values.apps.pgw.local_addresses.sgi_ip }} dev net1
-    python3 -m http.server 80 --bind {{ .Values.endpoints.ext.local_addresses.sgi_ip }}
-
+    sgi_ip="{{ .Values.endpoints.ext.local_addresses.sgi_ip }}"
+    final_ip=$(ip route list | grep ${sgi_ip} | awk '{print $9}' | awk -F "." '{print $1"."$2"."$3"."$4+1}')
+    listen_ip=$(ip route list | grep ${sgi_ip} | awk '{print $9}')
+    ip route add {{ .Values.endpoints.ext.local_addresses.euu_ip }} via ${final_ip} dev nsm0
+    python3 -m http.server 80 --bind ${listen_ip}

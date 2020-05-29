@@ -71,6 +71,8 @@ spec:
         configMap:
           name: gogtp-conf-{{$k}}
           defaultMode: 0777
+      nodeSelector:
+        kubernetes.io/hostname: {{ $v.node }}
 metadata:
   name: {{ $.Chart.Name }}-{{$k}}
   annotations:
@@ -118,6 +120,8 @@ spec:
         configMap:
           name: gogtp-conf-{{$k}}
           defaultMode: 0777
+      nodeSelector:
+        kubernetes.io/hostname: {{ $v.node }}
 metadata:
   name: {{ $.Chart.Name }}-{{$k}}
   annotations:
