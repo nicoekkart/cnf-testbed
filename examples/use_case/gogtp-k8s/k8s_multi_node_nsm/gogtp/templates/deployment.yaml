@@ -39,7 +39,6 @@ spec:
         image: python:slim
         command: ["python", "-m", "http.server", "{{ $v.idPort }}"]
         imagePullPolicy: IfNotPresent
-      {{ if $v.real }}
       - name: {{ $.Chart.Name }}-{{ $k }}
         image: "soelvkaer/gogtp:{{$k}}"
         imagePullPolicy: IfNotPresent
@@ -47,15 +46,11 @@ spec:
         {{ if eq $k "enb" }}
         args:
           - sleep 40;
-            ./root/enb_setup.sh /root/enb.yml /enb.yml;
-            tail -f /dev/null;
-            #/usr/local/bin/enb -config /root/enb.yml;
+            ./setup/enb_setup.sh /root/enb.yml /enb.yml;
         {{ else }}
         args:
           - sleep 10;
-            ./root/{{$k}}_setup.sh /root/{{$k}}.yml /{{$k}}.yml;
-            #tail -f /dev/null;
-            #/usr/local/bin/{{$k}} -config /root/{{$k}}.yml;
+            ./setup/{{$k}}_setup.sh /root/{{$k}}.yml /{{$k}}.yml;
         {{ end }}
         securityContext:
           privileged: true
@@ -65,11 +60,16 @@ spec:
         volumeMounts:
         - name: gogtp-conf-{{$k}}
           mountPath: /root/
-      {{ end }}
+        - name: gogtp-setup-{{$k}}
+          mountPath: /setup/
       volumes:
       - name: gogtp-conf-{{$k}}
         configMap:
           name: gogtp-conf-{{$k}}
+          defaultMode: 0777
+      - name: gogtp-setup-{{$k}}
+        configMap:
+          name: gogtp-setup-{{$k}}
           defaultMode: 0777
       nodeSelector:
         kubernetes.io/hostname: {{ $v.node }}
