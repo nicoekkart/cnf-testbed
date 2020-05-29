@@ -16,7 +16,7 @@ spec:
       containers:
       {{ if $v.endpoint_ip }}
       - name: sidecar-nse
-        image: nicoekkart/4g-network-sidecar-nse:latest
+        image: networkservicemesh/4g-network-sidecar-nse:latest
         imagePullPolicy: IfNotPresent
         env:
           - name: ENDPOINT_NETWORK_SERVICE
@@ -46,11 +46,11 @@ spec:
         {{ if eq $k "enb" }}
         args:
           - sleep 40;
-            ./setup/enb_setup.sh /root/enb.yml /enb.yml;
+            ./setup/setup.sh /root/enb.yml /enb.yml;
         {{ else }}
         args:
           - sleep 10;
-            ./setup/{{$k}}_setup.sh /root/{{$k}}.yml /{{$k}}.yml;
+            ./setup/setup.sh /root/{{$k}}.yml /{{$k}}.yml;
         {{ end }}
         securityContext:
           privileged: true
