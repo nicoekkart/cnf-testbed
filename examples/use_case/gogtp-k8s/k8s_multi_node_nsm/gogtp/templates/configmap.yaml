@@ -59,15 +59,19 @@ data:
     mme_addr: "{{ $.Values.apps.enb.mme_addr }}"
     prom_addr: "{{ $.Values.apps.enb.prom_addr }}"
     subscribers:
-    - imsi: "001010000000001"
-      msisdn: "814000000001"
-      imeisv: "1234500000001"
+    {{ $count := .Values.endpoints.ue.replicas | int }}
+
+    {{ range $i, $e := until $count }}
+    - imsi: "00101000000000{{ $i }}"
+      msisdn: "81400000000{{ $i }}"
+      imeisv: "123450000000{{ $i }}"
       src_ip: "{{ $.Values.apps.enb.local_addresses.euu_ip }}"
       i_tei: 0
       type: "external"
       euu_if_name: "{{ $.Values.apps.enb.local_addresses.euu_if }}"
       http_url: ""
       reattach_on_reload: false
+    {{ end }}
 
 {{ range $k, $v := .Values.apps }}
 ---

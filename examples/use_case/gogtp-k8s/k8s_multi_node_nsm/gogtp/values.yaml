@@ -61,6 +61,7 @@ apps:
 
 endpoints:
   ue:
+    replicas: 2
     node: "node1"
     idPort: "1238"
     networks: 
@@ -70,6 +71,7 @@ endpoints:
       sgi_ip: "10.60.1.0/24"
 
   ext:
+    replicas: 2
     node: "node2"
     idPort: "1239"
     networks: 

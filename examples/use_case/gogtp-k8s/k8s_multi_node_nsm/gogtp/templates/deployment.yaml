@@ -16,7 +16,7 @@ spec:
       containers:
       {{ if $v.endpoint_ip }}
       - name: sidecar-nse
-        image: networkservicemesh/4g-network-sidecar-nse:latest
+        image: nicoekkart/4g-network-sidecar-nse:latest
         imagePullPolicy: IfNotPresent
         env:
           - name: ENDPOINT_NETWORK_SERVICE
@@ -54,9 +54,6 @@ spec:
         {{ end }}
         securityContext:
           privileged: true
-        resources:
-          limits:
-            cpu: "3"
         volumeMounts:
         - name: gogtp-conf-{{$k}}
           mountPath: /root/
@@ -71,8 +68,8 @@ spec:
         configMap:
           name: gogtp-setup-{{$k}}
           defaultMode: 0777
-      nodeSelector:
-        kubernetes.io/hostname: {{ $v.node }}
+      #nodeSelector:
+        #kubernetes.io/hostname: {{ $v.node }}
 metadata:
   name: {{ $.Chart.Name }}-{{$k}}
   annotations:
@@ -86,7 +83,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 spec:
-  replicas: 1
+  replicas: {{ $v.replicas }}
   selector:
     matchLabels:
       networkservicemesh.io/app: {{ $k }}
@@ -120,8 +117,8 @@ spec:
         configMap:
           name: gogtp-conf-{{$k}}
           defaultMode: 0777
-      nodeSelector:
-        kubernetes.io/hostname: {{ $v.node }}
+      #nodeSelector:
+      #  kubernetes.io/hostname: {{ $v.node }}
 metadata:
   name: {{ $.Chart.Name }}-{{$k}}
   annotations:
